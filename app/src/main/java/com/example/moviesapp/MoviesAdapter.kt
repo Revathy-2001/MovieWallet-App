@@ -1,6 +1,7 @@
 package com.example.moviesapp
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.moviesapp.databinding.SinglemovieBinding
+import kotlinx.parcelize.Parcelize
 
 class MoviesAdapter(): RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>() {
     lateinit var context: Context
@@ -20,8 +22,17 @@ class MoviesAdapter(): RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>() {
     }
 
     inner class MovieViewHolder(singleMovieBinding: SinglemovieBinding):RecyclerView.ViewHolder(singleMovieBinding.root) {
+      val Intent:Intent? = null
       val imageView = singleMovieBinding.movieImage
       val textView = singleMovieBinding.movieName
+       init {
+           singleMovieBinding.root.setOnClickListener{
+               val movie = moviesList[adapterPosition]
+               val intent = Intent(context, SingleMovieActivity::class.java)
+               intent.putExtra("MovieObject",movie)
+               context.startActivity(intent)
+           }
+       }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
@@ -32,7 +43,6 @@ class MoviesAdapter(): RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>() {
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         var url = "https://media.istockphoto.com/vectors/movie-theater-with-row-of-red-seats-vector-id832125730?k=20&m=832125730&s=612x612&w=0&h=3ijKbVqGkQZeAFAu86nXkWOY6oaL16oVGEBaa6W7kms="
-//        var url = "https://media.istockphoto.com/vectors/advertising-for-the-film-industry-film-popcorn-glasses-and-tickets-3d-vector-id1128891156?k=20&m=1128891156&s=612x612&w=0&h=7HjOLHkQioiRmPfPwcKAmkqTPnCk7DHP28I2FLDV99I="
         holder.textView.text=(moviesList[position].title)
         Glide.with(context).load(url).placeholder(R.drawable.ic_launcher_background).transition(DrawableTransitionOptions.withCrossFade(2000)).into(holder.imageView)
     }
